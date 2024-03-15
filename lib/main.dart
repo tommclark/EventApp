@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'create.dart';
+import 'create_page_dart.dart';
 import 'signup_screen.dart';
+import 'time_date_for_create.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(TimeOfDayAdapter());
+  Hive.registerAdapter(EventAdapter()); // Register your adapter
+  await Hive.openBox<Event>('events'); // Open the box for events
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

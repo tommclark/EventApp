@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'create.dart';
 
 class Search extends StatelessWidget {
   @override
@@ -158,6 +160,55 @@ class Search extends StatelessWidget {
                 ],
               ),
             ),
+          ElevatedButton(
+            onPressed: () async {
+              var box = await Hive.openBox('events');
+              var contents = box.values.toList();
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Box Contents',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: contents.length,
+                            itemBuilder: (context, index) {
+                              Event event = contents[index];
+                              return ListTile(
+                                title: Text('Name: ${event.name}'),
+                                subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Date: ${event.date}'),
+                                  Text('Time: ${event.time}'),
+                                  Text('Location: ${event.location}'),
+                                  Text('Description: ${event.description}'),
+                                ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+            child: Text('Show Box Contents'),
+          ),
              Padding(
               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
               child: TextField(

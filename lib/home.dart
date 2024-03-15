@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text('Create Events'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => CreateEventPage()));
+                    builder: (context) => EventForm()));
               },
             ),
             ListTile(

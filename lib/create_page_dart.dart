@@ -1,245 +1,232 @@
 import 'package:flutter/material.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'create.dart';
 
-class CreateEventPage extends StatefulWidget {
+class EventForm extends StatefulWidget {
   @override
-  _CreateEventPageState createState() => _CreateEventPageState();
+  _EventFormState createState() => _EventFormState();
 }
 
-class _CreateEventPageState extends State<CreateEventPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _EventFormState extends State<EventForm> {
   final TextEditingController _userIDController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _streetNameController = TextEditingController();
-  TextEditingController _streetNumberController = TextEditingController();
-  TextEditingController _postalCodeController = TextEditingController();
-  TextEditingController _additionalDetailsController = TextEditingController();
+
+  final TextEditingController _streetNameController = TextEditingController();
+  final TextEditingController _streetNumberController = TextEditingController();
+  final TextEditingController _postalCodeController = TextEditingController();
+  final TextEditingController _additionalDetailsController = TextEditingController();
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+
+  void _saveEvent(Event event) async {
+    final box = await Hive.openBox<Event>('events');
+    await box.add(event);
+    print('Contents of Hive box "events":');
+    for (var i = 0; i < box.length; i++) {
+      print('Key: ${box.keyAt(i)}, Value: ${box.getAt(i)}');
+    }
+    await box.close();
+    print('Box closed');
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+      helpText: 'Select Event Date',
+      cancelText: 'Cancel',
+      confirmText: 'OK',
+      errorFormatText: 'Invalid date format',
+      errorInvalidText: 'Invalid date',
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        _selectedTime = pickedTime;
+      });
+    }
+  }
+
+  void _submitForm() {
+    final event = Event(
+      userID: _userIDController.text,
+      name: _nameController.text,
+      date: _selectedDate ?? DateTime.now(),
+      time: _selectedTime ?? TimeOfDay.now(),
+      location: _locationController.text,
+      description: _descriptionController.text,
+    );
+
+    _saveEvent(event);
+
+    // Clear the text controllers after saving the event
+    _userIDController.clear();
+    _nameController.clear();
+    _locationController.clear();
+    _descriptionController.clear();
+
+    // Reset selected date and time
+    setState(() {
+      _selectedDate = null;
+      _selectedTime = null;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Creation'),
+        title: Text('Add Event'),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.blue.withOpacity(0.1), Colors.white],
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                Center(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.blue,
-                        width: 2.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.blue.withOpacity(0.1),
-                    ),
-                    child: Text(
-                      'Event Creation',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                controller: _userIDController,
+                decoration: InputDecoration(labelText: 'User ID'),
+              ),
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+              ),
+              ElevatedButton(
+                onPressed: () => _selectDate(context),
+                child: Text('Select Date'),
+              ),
+              _selectedDate != null
+                  ? Text(
+                'Selected Date: ${_selectedDate!.toString()}',
+                style: TextStyle(fontSize: 16),
+              )
+                  : SizedBox(), // Show selected date if available
+              ElevatedButton(
+                onPressed: () => _selectTime(context),
+                child: Text('Select Time'),
+              ),
+              _selectedTime != null
+                  ? Text(
+                'Selected Time: ${_selectedTime!.format(context)}',
+                style: TextStyle(fontSize: 16),
+              )
+                  : SizedBox(), // Show selected time if available
+              TextFormField(
+                controller: _locationController,
+                readOnly: true,
+                onTap: () {
+                  _showLocationDialog(context, _streetNameController, _streetNumberController, _postalCodeController,
+                      _additionalDetailsController, _locationController);
+                },
+                decoration: InputDecoration(
+                  labelText: 'Location',
+                  hintText: 'Select the Location for this event',
                 ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: _userIDController,
-                  decoration: InputDecoration(
-                    labelText: 'User ID',
-                    hintText: 'Enter your User ID',
-                  ),
-                ),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    hintText: 'Enter the Event Name',
-                  ),
-                ),
-                TextFormField(
-                  controller: _dateController,
-                  readOnly: true,
-                  onTap: () async {
-                    final DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2101),
-                      helpText: 'Select Event Date',
-                      cancelText: 'Cancel',
-                      confirmText: 'OK',
-                      errorFormatText: 'Invalid date format',
-                      errorInvalidText: 'Invalid date',
-                    );
-
-                    if (pickedDate != null) {
-                      setState(() {
-                        _dateController.text = pickedDate.toString().substring(0, 10);
-                      });
-                    }
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Date',
-                    hintText: 'The Date that will take place for this event',
-                  ),
-                ),
-                TextFormField(
-                  controller: _timeController,
-                  readOnly: true,
-                  onTap: () async {
-                    final TimeOfDay? pickedTime = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-
-                    if (pickedTime != null) {
-                      setState(() {
-                        _timeController.text = pickedTime.format(context);
-                      });
-                    }
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Time',
-                    hintText: 'Enter the Starting Time',
-                  ),
-                ),
-                TextFormField(
-                  controller: _locationController,
-                  readOnly: true,
-                  onTap: () {
-                    _showLocationDialog(context, _streetNameController, _streetNumberController, _postalCodeController,
-                        _additionalDetailsController, _locationController);
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Location',
-                    hintText: 'Select the Location for this event',
-                  ),
-                ),
-                /*TextFormField(
-                  controller: _locationController,
-                  /*readOnly: true,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapScreen(locationController: _locationController),
-                      ),
-                    );
-                  },*/
-                  decoration: InputDecoration(
-                    labelText: 'Location',
-                    hintText: 'Select the Location for this event',
-                  ),
-                ),*/
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    hintText: 'Say more about this Event in-details..',
-                  ),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    // Placeholder for button functionality
-                  },
-                  child: Text('Create Event'),
-                ),
-              ],
-            ),
+              ),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: InputDecoration(labelText: 'Description'),
+              ),
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: Text('Add Event'),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
-void _showLocationDialog(BuildContext context, TextEditingController streetNameController,
-    TextEditingController streetNumberController, TextEditingController postalCodeController,
-    TextEditingController additionalDetailsController, TextEditingController locationController) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Enter Location Details'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Street Name',
-                ),
-                controller: streetNameController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Street Number',
-                ),
-                controller: streetNumberController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Postal Code',
-                ),
-                controller: postalCodeController,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Additional Details',
-                ),
-                maxLines: 3,
-                controller: additionalDetailsController,
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Get the text from the controllers and concatenate them
-              String locationDetails = (streetNameController.text.isNotEmpty ? streetNameController.text + ', ' : '') +
-                  (streetNumberController.text.isNotEmpty ? streetNumberController.text + ', ' : '') +
-                  (postalCodeController.text.isNotEmpty ? postalCodeController.text + ', ' : '') +
-                  additionalDetailsController.text;
 
-              // Update the location controller with the concatenated details
-              locationController.text = locationDetails.trim();
-
-              // Close the dialog
-              Navigator.of(context).pop();
-            },
-            child: Text('Save'),
+  void _showLocationDialog(BuildContext context, TextEditingController streetNameController,
+      TextEditingController streetNumberController, TextEditingController postalCodeController,
+      TextEditingController additionalDetailsController, TextEditingController locationController) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Location Details'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Street Name',
+                  ),
+                  controller: streetNameController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Street Number',
+                  ),
+                  controller: streetNumberController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Postal Code',
+                  ),
+                  controller: postalCodeController,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Additional Details',
+                  ),
+                  maxLines: 3,
+                  controller: additionalDetailsController,
+                ),
+              ],
+            ),
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Get the text from the controllers and concatenate them
+                String locationDetails = (streetNameController.text.isNotEmpty ? streetNameController.text + ', ' : '') +
+                    (streetNumberController.text.isNotEmpty ? streetNumberController.text + ', ' : '') +
+                    (postalCodeController.text.isNotEmpty ? postalCodeController.text + ', ' : '') +
+                    additionalDetailsController.text;
+
+                // Update the location controller with the concatenated details
+                locationController.text = locationDetails.trim();
+
+                // Close the dialog
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
 
 
