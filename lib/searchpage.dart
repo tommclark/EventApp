@@ -206,6 +206,8 @@ class Search extends StatelessWidget {
                   );
                 },
               );
+            await box.close();
+            print('Box closed');
             },
             child: Text('Show Box Contents'),
           ),
