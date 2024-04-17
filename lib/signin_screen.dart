@@ -1,80 +1,244 @@
 import 'package:flutter/material.dart';
-import 'package:setap/home.dart';
+import 'package:setap/signup_screen.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
-class SignInScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  // LoginScreen({Key? key}) : super(key: key);
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool _isObscure = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-            Text(
-            'Event App',
-            style: TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.bold,
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/backdrop.jpg"),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 50, 16, 16),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    "Enter Details to Login",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 24,
+                      color: Color(0xffffffff),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(50, 30, 50, 16),
+                    child: TextField(
+                      controller: _emailController,
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 14,
+                        color: Color(0xff000000),
+                      ),
+                      decoration: InputDecoration(
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide:
+                          BorderSide(color: Color(0x00ffffff), width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide:
+                          BorderSide(color: Color(0x00ffffff), width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide:
+                          BorderSide(color: Color(0x00ffffff), width: 1),
+                        ),
+                        hintText: "Email",
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 14,
+                          color: Color(0xff000000),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xfff2f2f3),
+                        isDense: false,
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(50, 0, 50, 16),
+                    child: TextField(
+                      controller: _passwordController,
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 14,
+                        color: Color(0xff000000),
+                      ),
+                      obscureText: _isObscure,
+                      decoration: InputDecoration(
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide:
+                          BorderSide(color: Color(0x00ffffff), width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide:
+                          BorderSide(color: Color(0x00ffffff), width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide:
+                          BorderSide(color: Color(0x00ffffff), width: 1),
+                        ),
+                        hintText: "Password",
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 14,
+                          color: Color(0xff000000),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xfff2f2f3),
+                        isDense: false,
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                          child: Icon(
+                            _isObscure ? Icons.visibility : Icons.visibility_off,
+                            color: Color(0x797a33fb),
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(50, 30, 50, 16),
+                    child: MaterialButton(
+                      onPressed: () {
+                        // try {
+                        //   UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+                        //     email: _emailController.text.trim(),
+                        //     password: _passwordController.text.trim(),
+                        //   );
+                        //   if (userCredential.user != null) {
+                        //     // User is signed in
+                        //     // Navigate to the next screen
+                        //     Navigator.pushReplacement(
+                        //       context,
+                        //       MaterialPageRoute(builder: (context) => MyApp()),
+                        //     );
+                        //   }
+                        // } on FirebaseAuthException catch (e) {
+                        //   print('Caught FirebaseAuthException: ${e.code}');
+                        //   if (e.code == 'invalid-email' || e.code == 'invalid-login-credentials') {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       const SnackBar(content: Text('Wrong email or password provided.')),
+                        //     );
+                        //   }
+                        // }
+                      },
+                      color: Color(0xff7b33fd),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        "LOGIN",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.normal,
+                        ),
+                      ),
+                      textColor: Color(0xffffffff),
+                      height: 40,
+                      minWidth: MediaQuery.of(context).size.width,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Don't Have an account?",
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.clip,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal,
+                            fontSize: 14,
+                            color: Color(0xffffffff),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(4, 0, 0, 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => RegisterScreen()),
+                              );
+                            },
+                            child: Text(
+                              "Sign Up",
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                                fontSize: 14,
+                                color: Color(0xffff78fb),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 48.0),
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Your Email',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          SizedBox(height: 16.0),
-          TextFormField(
-            obscureText: true,
-            decoration: InputDecoration(
-              labelText: 'Password',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          SizedBox(height: 24.0),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => HomeScreen()));
-            },
-            child: Text('Sign In'),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blue,
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-            ),
-          ),
-          SizedBox(height: 16.0),
-          TextButton(
-            onPressed: () {
-
-            },
-            child: Text(
-              "Don't have an account? Sign Up",
-            ),
-          ),
-          SizedBox(height: 16.0),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-              ElevatedButton(
-              onPressed: () {
-          // Implement Google sign-in logic
-        },
-          child: Text('Sign in with Google'),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: Colors.grey,
-            padding: EdgeInsets.symmetric(vertical: 12.0),
           ),
         ),
-    ],
-    ),
-    ],
-    ),
-    ),
+      ),
     );
   }
 }
