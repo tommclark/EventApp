@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'create.dart';
 
 class EventBookingPage extends StatefulWidget {
   @override
@@ -6,18 +8,16 @@ class EventBookingPage extends StatefulWidget {
 }
 
 class _EventBookingPageState extends State<EventBookingPage> {
-  String selectedEvent = "";
-  int selectedQuantity = 1; 
+  late Box<Event> eventBox;
 
-  
-  bool validatePayment() {
-    
-    return true;
+  @override
+  void initState() {
+    super.initState();
+    _openBox();
   }
 
-  void bookEvent(int quantity) {
-    
-    print("Event booked: $selectedEvent, Quantity: $quantity");
+  Future<void> _openBox() async {
+    eventBox = await Hive.openBox<Event>('events');
   }
 
   @override
@@ -34,124 +34,49 @@ class _EventBookingPageState extends State<EventBookingPage> {
             colors: [Colors.blue.shade200, Colors.blue.shade800],
           ),
         ),
-        child: ListView(
-          padding: EdgeInsets.all(16.0),
-          children: [
-            EventCard(
-              eventName: 'Music Festival',
-              eventDate: 'February 20, 2024',
-              eventLocation: 'Outdoor Arena',
-              eventDescription: 'A day filled with live music performances from various artists.',
-              organizerInfo: 'Music Events Inc.',
-              ticketPrice: 25.99, 
-              eventDuration: '12:00 PM - 10:00 PM',
-              imageUrl: 'https://example.com/music_festival_poster.jpg',
-              attendeeCount: 500,
-              onTap: () => showConfirmationDialog(
-                'Music Festival',
-                'February 20, 2024',
-                'Outdoor Arena',
-                'A day filled with live music performances from various artists.',
-                'Music Events Inc.',
-                25.99,
-                '12:00 PM - 10:00 PM',
-                'https://example.com/music_festival_poster.jpg',
-                500,
-              ),
-            ),
-            EventCard(
-              eventName: 'Tech Conference',
-              eventDate: 'February 25, 2024',
-              eventLocation: 'Tech Convention Center',
-              eventDescription: 'Explore the latest trends and innovations in technology.',
-              organizerInfo: 'Tech Innovations LLC',
-              ticketPrice: 49.99, 
-              eventDuration: '9:00 AM - 6:00 PM',
-              imageUrl: 'https://example.com/tech_conference_banner.jpg',
-              attendeeCount: 300,
-              onTap: () => showConfirmationDialog(
-                'Tech Conference',
-                'February 25, 2024',
-                'Tech Convention Center',
-                'Explore the latest trends and innovations in technology.',
-                'Tech Innovations LLC',
-                49.99,
-                '9:00 AM - 6:00 PM',
-                'https://example.com/tech_conference_banner.jpg',
-                300,
-              ),
-            ),
-            
-            EventCard(
-              eventName: 'Art Exhibition',
-              eventDate: 'March 5, 2024',
-              eventLocation: 'City Art Gallery',
-              eventDescription: 'Discover stunning artworks from talented local and international artists.',
-              organizerInfo: 'Artistic Creations Foundation',
-              ticketPrice: 15.99, 
-              eventDuration: '10:00 AM - 5:00 PM',
-              imageUrl: 'https://example.com/art_exhibition_poster.jpg',
-              attendeeCount: 200,
-              onTap: () => showConfirmationDialog(
-                'Art Exhibition',
-                'March 5, 2024',
-                'City Art Gallery',
-                'Discover stunning artworks from talented local and international artists.',
-                'Artistic Creations Foundation',
-                15.99,
-                '10:00 AM - 5:00 PM',
-                'https://example.com/art_exhibition_poster.jpg',
-                200,
-              ),
-            ),
-            EventCard(
-              eventName: 'Food Festival',
-              eventDate: 'March 15, 2024',
-              eventLocation: 'Culinary Square',
-              eventDescription: 'Indulge in a variety of delicious cuisines from top chefs and food vendors.',
-              organizerInfo: 'Gourmet Delights Events',
-              ticketPrice: 35.99, 
-              eventDuration: '6:00 PM - 11:00 PM',
-              imageUrl: 'https://example.com/food_festival_banner.jpg',
-              attendeeCount: 400,
-              onTap: () => showConfirmationDialog(
-                'Food Festival',
-                'March 15, 2024',
-                'Culinary Square',
-                'Indulge in a variety of delicious cuisines from top chefs and food vendors.',
-                'Gourmet Delights Events',
-                35.99,
-                '6:00 PM - 11:00 PM',
-                'https://example.com/food_festival_banner.jpg',
-                400,
-              ),
-            ),
-            EventCard(
-              eventName: 'Fitness Workshop',
-              eventDate: 'March 25, 2024',
-              eventLocation: 'Wellness Center',
-              eventDescription: 'Join expert trainers for a day of fitness routines, wellness tips, and health advice.',
-              organizerInfo: 'Healthy Living Co.',
-              ticketPrice: 19.99, 
-              eventDuration: '8:00 AM - 3:00 PM',
-              imageUrl: 'https://example.com/fitness_workshop_poster.jpg',
-              attendeeCount: 150,
-              onTap: () => showConfirmationDialog(
-                'Fitness Workshop',
-                'March 25, 2024',
-                'Wellness Center',
-                'Join expert trainers for a day of fitness routines, wellness tips, and health advice.',
-                'Healthy Living Co.',
-                19.99,
-                '8:00 AM - 3:00 PM',
-                'https://example.com/fitness_workshop_poster.jpg',
-                150,
-              ),
-            ),
-           
-          ],
+        child: FutureBuilder(
+          future: _openBox(),
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return _buildEventList();
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ),
       ),
+    );
+  }
+
+  Widget _buildEventList() {
+    return ListView.builder(
+      padding: EdgeInsets.all(16.0),
+      itemCount: eventBox.length,
+      itemBuilder: (context, index) {
+        Event event = eventBox.getAt(index)!;
+        return EventCard(
+          eventName: event.name,
+          eventDate: event.date.toString(),
+          eventLocation: event.location,
+          eventDescription: event.description,
+          organizerInfo: event.userID,
+          ticketPrice: 0, // Change this according to your data model
+          eventDuration: '', // Change this according to your data model
+          imageUrl: '', // Change this according to your data model
+          attendeeCount: 0, // Change this according to your data model
+          onTap: () => showConfirmationDialog(
+            event.name,
+            event.date.toString(),
+            event.location,
+            event.description,
+            event.userID,
+            0, // Change this according to your data model
+            '', // Change this according to your data model
+            '', // Change this according to your data model
+            0, // Change this according to your data model
+          ),
+        );
+      },
     );
   }
 
@@ -167,10 +92,12 @@ class _EventBookingPageState extends State<EventBookingPage> {
     int attendees,
   ) {
     setState(() {
-      selectedEvent = event;
+      // You can handle booking logic here if needed
+      // For example:
+      // selectedEvent = event;
+      // Perform booking actions
     });
 
-    
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -180,7 +107,7 @@ class _EventBookingPageState extends State<EventBookingPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Event: $selectedEvent'),
+              Text('Event: $event'),
               SizedBox(height: 8),
               Text('Date: $date'),
               Text('Location: $location'),
@@ -197,7 +124,7 @@ class _EventBookingPageState extends State<EventBookingPage> {
                 keyboardType: TextInputType.number,
                 initialValue: '1',
                 onChanged: (value) {
-                  selectedQuantity = int.tryParse(value) ?? 1;
+                  // Handle quantity change if needed
                 },
               ),
             ],
@@ -211,26 +138,25 @@ class _EventBookingPageState extends State<EventBookingPage> {
             ),
             TextButton(
               onPressed: () {
-                
-                if (validatePayment()) {
-                  bookEvent(selectedQuantity);
-                  Navigator.pop(context); 
-                  
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Event booked successfully!'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                } else {
-                  
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Invalid payment information. Please try again.'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                }
+                // Perform booking action here if needed
+                // For example:
+                // if (validatePayment()) {
+                //   bookEvent(selectedQuantity);
+                //   Navigator.pop(context); 
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     SnackBar(
+                //       content: Text('Event booked successfully!'),
+                //       duration: Duration(seconds: 2),
+                //     ),
+                //   );
+                // } else {
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     SnackBar(
+                //       content: Text('Invalid payment information. Please try again.'),
+                //       duration: Duration(seconds: 2),
+                //     ),
+                //   );
+                // }
               },
               child: Text('Book'),
             ),
@@ -238,6 +164,12 @@ class _EventBookingPageState extends State<EventBookingPage> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    eventBox.close();
+    super.dispose();
   }
 }
 
@@ -292,7 +224,6 @@ class EventCard extends StatelessWidget {
               Text('Ticket Price: £${ticketPrice.toStringAsFixed(2)}'), 
               Text('Duration: $eventDuration'),
               Text('Attendees: $attendeeCount'),
-              
             ],
           ),
         ),

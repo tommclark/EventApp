@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:setap/home.dart';
 import 'package:setap/signup_screen.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+
 
 class LoginScreen extends StatefulWidget {
-  // LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -12,7 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -148,28 +150,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(50, 30, 50, 16),
                     child: MaterialButton(
-                      onPressed: () {
-                        // try {
-                        //   UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-                        //     email: _emailController.text.trim(),
-                        //     password: _passwordController.text.trim(),
-                        //   );
-                        //   if (userCredential.user != null) {
-                        //     // User is signed in
-                        //     // Navigate to the next screen
-                        //     Navigator.pushReplacement(
-                        //       context,
-                        //       MaterialPageRoute(builder: (context) => MyApp()),
-                        //     );
-                        //   }
-                        // } on FirebaseAuthException catch (e) {
-                        //   print('Caught FirebaseAuthException: ${e.code}');
-                        //   if (e.code == 'invalid-email' || e.code == 'invalid-login-credentials') {
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //       const SnackBar(content: Text('Wrong email or password provided.')),
-                        //     );
-                        //   }
-                        // }
+                      onPressed: () async {
+                        try {
+                          UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+                          if (userCredential.user != null) {
+                            // User is signed in
+                            // Navigate to the next screen
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomeScreen()),
+                            );
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          print('Caught FirebaseAuthException: ${e.code}');
+                          if (e.code == 'user-not-found' || e.code == 'wrong-password' || e.code == 'invalid-credential') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Invalid credentials provided.')),
+                            );
+                          }
+                        } catch (e) {
+                          print('Caught Exception: $e');
+                        }
                       },
                       color: Color(0xff7b33fd),
                       elevation: 0,

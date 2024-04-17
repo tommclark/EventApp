@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:setap/signin_screen.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+
 
 class RegisterScreen extends StatefulWidget {
-  // RegisterScreen({Key? key}) : super(key: key);
+  RegisterScreen({Key? key}) : super(key: key);
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -13,7 +14,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     padding: EdgeInsets.fromLTRB(50, 0, 50, 16),
                     child: TextField(
                       controller: _emailController,
-                      obscureText: _isObscure,
+                      obscureText: false,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       style: TextStyle(
@@ -203,35 +204,74 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Padding(
+                    padding: EdgeInsets.fromLTRB(50, 0, 50, 16),
+                    child: Text(
+                      'Password should be at least 4 characters, contain at least one lowercase letter, one uppercase letter, and one number.',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  Padding(
                     padding: EdgeInsets.fromLTRB(50, 30, 50, 16),
                     child: MaterialButton(
-                       onPressed: ()  {
-                      //   try {
-                      //     UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-                      //       email: _emailController.text.trim(),
-                      //       password: _passwordController.text.trim(),
-                      //     );
-                      //     if (userCredential.user != null) {
-                      //       userCredential.user!.updateDisplayName(_nameController.text.trim());
-                      //       ScaffoldMessenger.of(context).showSnackBar(
-                      //         SnackBar(content: Text('Account created successfully')),
-                      //       );
-                      //       // Navigate to Signin page
-                      //       await Future.delayed(Duration(seconds: 1));
-                      //       Navigator.pushReplacement(
-                      //         context,
-                      //         MaterialPageRoute(builder: (context) => LoginScreen()),
-                      //       );
-                      //     }
-                      //   } on FirebaseAuthException catch (e) {
-                      //     if (e.code == 'weak-password') {
-                      //       print('The password provided is too weak.');
-                      //     } else if (e.code == 'email-already-in-use') {
-                      //       print('The account already exists for that email.');
-                      //     }
-                      //   } catch (e) {
-                      //     print(e);
-                      //   }
+                       onPressed: ()  async {
+                         String password = _passwordController.text.trim();
+                         if (password.length < 4) {
+                           ScaffoldMessenger.of(context).showSnackBar(
+                             SnackBar(content: Text('Password should be at least 4 characters')),
+                           );
+                           return;
+                         }
+                         if (!RegExp(r'[a-z]').hasMatch(password)) {
+                           ScaffoldMessenger.of(context).showSnackBar(
+                             SnackBar(content: Text('Password should contain at least one lowercase letter')),
+                           );
+                           return;
+                         }
+                         if (!RegExp(r'[A-Z]').hasMatch(password)) {
+                           ScaffoldMessenger.of(context).showSnackBar(
+                             SnackBar(content: Text('Password should contain at least one uppercase letter')),
+                           );
+                           return;
+                         }
+                         if (!RegExp(r'[0-9]').hasMatch(password)) {
+                           ScaffoldMessenger.of(context).showSnackBar(
+                             SnackBar(content: Text('Password should contain at least one number')),
+                           );
+                           return;
+                         }
+                        try {
+                          UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+                          if (userCredential.user != null) {
+                            userCredential.user!.updateDisplayName(_nameController.text.trim());
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Account created successfully')),
+                            );
+                            // Navigate to Signin page
+                            await Future.delayed(Duration(seconds: 1));
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                            );
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'weak-password') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('The password provided is too weak.')),
+                            );
+                          } else if (e.code == 'email-already-in-use') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('An account already exists for that email.')),
+                            );
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
                       },
                       color: Color(0xff7b33fd),
                       elevation: 0,

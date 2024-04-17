@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "722797715945",
+    "project_id": "setap-1d",
+    "storage_bucket": "setap-1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722797715945:android:dfc7fc9161097c83792b78",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4tnqiMoystj2rSXAu68E-zyyrL9h5cyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
