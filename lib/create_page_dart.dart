@@ -12,6 +12,8 @@ class _EventFormState extends State<EventForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _ticketPriceController = TextEditingController();
+  final TextEditingController _totalPriceController = TextEditingController();
 
   final TextEditingController _streetNameController = TextEditingController();
   final TextEditingController _streetNumberController = TextEditingController();
@@ -72,6 +74,8 @@ class _EventFormState extends State<EventForm> {
       time: _selectedTime ?? TimeOfDay.now(),
       location: _locationController.text,
       description: _descriptionController.text,
+      ticketPrice: double.parse(_ticketPriceController.text),
+      totalPrice: 0,
     );
 
     _saveEvent(event);
@@ -81,6 +85,8 @@ class _EventFormState extends State<EventForm> {
     _nameController.clear();
     _locationController.clear();
     _descriptionController.clear();
+    _ticketPriceController.clear();
+    _totalPriceController.clear();
 
     // Reset selected date and time
     setState(() {
@@ -145,6 +151,11 @@ class _EventFormState extends State<EventForm> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(labelText: 'Description'),
+              ),
+              TextFormField(
+                controller: _ticketPriceController, // Use the ticket price controller here
+                keyboardType: TextInputType.numberWithOptions(decimal: true), // Allow decimal input
+                decoration: InputDecoration(labelText: 'Ticket Price'),
               ),
               ElevatedButton(
                 onPressed: _submitForm,

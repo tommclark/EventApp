@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'create.dart';
-
+import 'payment.dart';
 class EventBookingPage extends StatefulWidget {
   @override
   _EventBookingPageState createState() => _EventBookingPageState();
@@ -9,11 +9,13 @@ class EventBookingPage extends StatefulWidget {
 
 class _EventBookingPageState extends State<EventBookingPage> {
   late Box<Event> eventBox;
-
+  late TextEditingController _ticketQuantityController;
+  List<String> bookedEvents = [];
   @override
   void initState() {
     super.initState();
     _openBox();
+    _ticketQuantityController = TextEditingController(text: '1');
   }
 
   Future<void> _openBox() async {
@@ -60,20 +62,15 @@ class _EventBookingPageState extends State<EventBookingPage> {
           eventLocation: event.location,
           eventDescription: event.description,
           organizerInfo: event.userID,
-          ticketPrice: 0, // Change this according to your data model
-          eventDuration: '', // Change this according to your data model
-          imageUrl: '', // Change this according to your data model
-          attendeeCount: 0, // Change this according to your data model
+          ticketPrice: event.ticketPrice,
+          totalPrice: event.totalPrice,
           onTap: () => showConfirmationDialog(
             event.name,
             event.date.toString(),
             event.location,
             event.description,
             event.userID,
-            0, // Change this according to your data model
-            '', // Change this according to your data model
-            '', // Change this according to your data model
-            0, // Change this according to your data model
+            event.ticketPrice,
           ),
         );
       },
@@ -81,23 +78,21 @@ class _EventBookingPageState extends State<EventBookingPage> {
   }
 
   void showConfirmationDialog(
-    String event,
-    String date,
-    String location,
-    String description,
-    String organizer,
-    double price,
-    String duration,
-    String imageUrl,
-    int attendees,
-  ) {
-    setState(() {
-      // You can handle booking logic here if needed
-      // For example:
-      // selectedEvent = event;
-      // Perform booking actions
-    });
+      String event,
+      String date,
+      String location,
+      String description,
+      String organizer,
+      double price,
+      ) async {
+    double totalPrice = 0; // Default value
 
+    try {
+      totalPrice = price * int.parse(_ticketQuantityController.text);
+    } catch (e) {
+      // Handle parsing error, e.g., set totalPrice to 0
+      print('Error parsing quantity: $e');
+    }//Calculate the total price based on ticket quantity
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -114,17 +109,18 @@ class _EventBookingPageState extends State<EventBookingPage> {
               SizedBox(height: 8),
               Text('Description: $description'),
               Text('Organizer: $organizer'),
-              Text('Ticket Price: £${price.toStringAsFixed(2)}'), 
-              Text('Duration: $duration'),
-              Text('Attendees: $attendees'),
+              Text('Ticket Price: £${price.toStringAsFixed(3)}'),
+              Text('Total Price: £${totalPrice.toStringAsFixed(3)}'),
               SizedBox(height: 8),
               Text('Select Number of Tickets:'),
-              
               TextFormField(
+                controller: _ticketQuantityController,
                 keyboardType: TextInputType.number,
-                initialValue: '1',
                 onChanged: (value) {
-                  // Handle quantity change if needed
+                  // Update the total price when quantity changes
+                  setState(() {
+                    totalPrice = price * int.parse(value);
+                  });
                 },
               ),
             ],
@@ -132,31 +128,45 @@ class _EventBookingPageState extends State<EventBookingPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
               },
               child: Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                // Perform booking action here if needed
-                // For example:
-                // if (validatePayment()) {
-                //   bookEvent(selectedQuantity);
-                //   Navigator.pop(context); 
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //     SnackBar(
-                //       content: Text('Event booked successfully!'),
-                //       duration: Duration(seconds: 2),
-                //     ),
-                //   );
-                // } else {
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //     SnackBar(
-                //       content: Text('Invalid payment information. Please try again.'),
-                //       duration: Duration(seconds: 2),
-                //     ),
-                //   );
-                // }
+              onPressed: () async {
+                // Open the booked events box
+                Box<Event> bookedEventsBox =
+                await Hive.openBox<Event>('booked_events');
+
+                // Add the booked event to the list with total price
+                Event bookedEvent = Event(
+                  name: event,
+                  date: DateTime.parse(date),
+                  time: TimeOfDay.now(),
+                  location: location,
+                  description: description,
+                  userID: organizer,
+                  ticketPrice: price,
+                  totalPrice: totalPrice, // Store the total price
+                );
+                bookedEventsBox.add(bookedEvent);
+
+                // Close the dialog
+                Navigator.pop(context);
+
+                // Show a confirmation message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Event booked successfully!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+
+                // Navigate to the payment screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PaymentScreen()),
+                );
               },
               child: Text('Book'),
             ),
@@ -180,9 +190,7 @@ class EventCard extends StatelessWidget {
   final String eventDescription;
   final String organizerInfo;
   final double ticketPrice;
-  final String eventDuration;
-  final String imageUrl;
-  final int attendeeCount;
+  final double totalPrice;
   final VoidCallback onTap;
 
   EventCard({
@@ -192,9 +200,7 @@ class EventCard extends StatelessWidget {
     required this.eventDescription,
     required this.organizerInfo,
     required this.ticketPrice,
-    required this.eventDuration,
-    required this.imageUrl,
-    required this.attendeeCount,
+    required this.totalPrice,
     required this.onTap,
   });
 
@@ -203,7 +209,7 @@ class EventCard extends StatelessWidget {
     return Card(
       elevation: 4.0,
       margin: EdgeInsets.only(bottom: 16.0),
-      color: Colors.white.withOpacity(0.9), 
+      color: Colors.white.withOpacity(0.9),
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -221,9 +227,7 @@ class EventCard extends StatelessWidget {
               SizedBox(height: 8.0),
               Text('Description: $eventDescription'),
               Text('Organizer: $organizerInfo'),
-              Text('Ticket Price: £${ticketPrice.toStringAsFixed(2)}'), 
-              Text('Duration: $eventDuration'),
-              Text('Attendees: $attendeeCount'),
+              Text('Ticket Price: £${ticketPrice.toStringAsFixed(3)}'),
             ],
           ),
         ),
@@ -231,3 +235,4 @@ class EventCard extends StatelessWidget {
     );
   }
 }
+//time: TimeOfDay(hour: 0, minute: 0),

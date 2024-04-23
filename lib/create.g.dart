@@ -1,5 +1,3 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'create.dart';
 
 // **************************************************************************
@@ -23,13 +21,15 @@ class EventAdapter extends TypeAdapter<Event> {
       time: fields[3] as TimeOfDay,
       location: fields[4] as String,
       description: fields[5] as String,
+      ticketPrice: fields[6] as double,
+      totalPrice: fields[7] as double,
     );
   }
 
   @override
   void write(BinaryWriter writer, Event obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.userID)
       ..writeByte(1)
@@ -41,7 +41,11 @@ class EventAdapter extends TypeAdapter<Event> {
       ..writeByte(4)
       ..write(obj.location)
       ..writeByte(5)
-      ..write(obj.description);
+      ..write(obj.description)
+      ..writeByte(6)
+      ..write(obj.ticketPrice)
+      ..writeByte(7)
+      ..write(obj.totalPrice);
   }
 
   @override

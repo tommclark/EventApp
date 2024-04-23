@@ -1,9 +1,48 @@
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'create.dart';
+import 'create.dart'; // Assuming you have the Event class defined here
 
-class Search extends StatelessWidget {
+class Search extends StatefulWidget {
+  @override
+  _SearchState createState() => _SearchState();
+}
+
+class _SearchState extends State<Search> {
+  late List<Event> events;
+  late List<Event> filteredEvents;
+  late bool isSearching;
+
+  @override
+  void initState() {
+    super.initState();
+    isSearching = true;
+    loadEvents();
+  }
+
+  Future<void> loadEvents() async {
+    var box = await Hive.openBox<Event>('events');
+    setState(() {
+      events = box.values.toList();
+      filteredEvents = [];
+      isSearching = false;
+    });
+  }
+
+  void filterEvents(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredEvents =
+            []; // define filtered events as an empty list so that the search page is empty when there is no query
+      } else {
+        filteredEvents = events
+            .where((event) =>
+                event.name.toLowerCase().contains(query.toLowerCase()) ||
+                event.location.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,225 +75,104 @@ class Search extends StatelessWidget {
           ),
         ),
       ),
-      body: Align(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-              child: Align(
-                alignment: Alignment(-0.5, 0.0),
-                child: Text(
-                  "Use filters/search options below",
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.clip,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                    fontSize: 14,
-                    color: Color(0xff000000),
-                  ),
-                ),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+            child: TextField(
+              onChanged: (query) => filterEvents(query),
+              decoration: InputDecoration(
+                hintText:
+                    'Search events by entering either their name or location...',
               ),
             ),
-             Padding(
-              padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                      width: MediaQuery.of(context).size.width * 0.33,
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Color(0xff7b7b7b),
-                        border: Border.all(color: Color(0xff000000), width: 1),
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          value: "Option 1",
-                          items: ["Option 1"]
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                            }).toList(),
-                          style: TextStyle(
-                            color: Color(0xff000000),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
-                          ),
-                          onChanged: (value) {},
-                          elevation: 8,
-                          isExpanded: true,
-                        ),
-                      )),
-                  Container(
-                      width: MediaQuery.of(context).size.width * 0.33,
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Color(0xff7b7b7b),
-                        border: Border.all(color: Color(0xff000000), width: 1),
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          value: "Option 1",
-                          items: ["Option 1"]
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          style: TextStyle(
-                            color: Color(0xff000000),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
-                          ),
-                          onChanged: (value) {},
-                          elevation: 8,
-                          isExpanded: true,
-                        ),
-                      )),
-                       Container(
-                      width: MediaQuery.of(context).size.width * 0.33,
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Color(0xff7b7b7b),
-                        border: Border.all(color: Color(0xff000000), width: 1),
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          value: "Option 1",
-                          items: ["Option 1"]
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          style: TextStyle(
-                            color: Color(0xff000000),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
-                          ),
-                          onChanged: (value) {},
-                          elevation: 8,
-                          isExpanded: true,
-                        ),
-                      )),
-                ],
-              ),
-            ),
-          ElevatedButton(
-            onPressed: () async {
-              var box = await Hive.openBox('events');
-              var contents = box.values.toList();
-              showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Box Contents',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: contents.length,
-                            itemBuilder: (context, index) {
-                              Event event = contents[index];
-                              return ListTile(
-                                title: Text('Name: ${event.name}'),
-                                subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Date: ${event.date}'),
-                                  Text('Time: ${event.time}'),
-                                  Text('Location: ${event.location}'),
-                                  Text('Description: ${event.description}'),
-                                ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            await box.close();
-            print('Box closed');
-            },
-            child: Text('Show Box Contents'),
           ),
-             Padding(
-              padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-              child: TextField(
-                controller: TextEditingController(),
-                obscureText: false,
-                textAlign: TextAlign.start,
-                maxLines: 1,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontStyle: FontStyle.normal,
-                  fontSize: 14,
-                  color: Color(0xff000000),
+          isSearching
+              ? CircularProgressIndicator() // Show loading indicator while searching
+              : Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredEvents.length,
+                    itemBuilder: (context, index) {
+                      return EventCard(
+                        eventName: filteredEvents[index].name,
+                        eventDate: filteredEvents[index].date.toString(),
+                        eventLocation: filteredEvents[index].location,
+                        eventDescription: filteredEvents[index].description,
+                        organizerInfo: filteredEvents[index].userID,
+                        ticketPrice:
+                            0, // Change this according to your data model
+                        eventDuration:
+                            '', // Change this according to your data model
+                        imageUrl:
+                            '', // Change this according to your data model
+                        attendeeCount:
+                            0, // Change this according to your data model
+                        onTap: () {},
+                      );
+                    },
+                  ),
                 ),
-                  decoration: InputDecoration(
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    borderSide: BorderSide(color: Color(0xff000000), width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    borderSide: BorderSide(color: Color(0xff000000), width: 1),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    borderSide: BorderSide(color: Color(0xff000000), width: 1),
-                  ),
-                  hintText: "Search...",
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                    fontSize: 14,
-                    color: Color(0xb9000000),
-                  ),
-                  filled: true,
-                  fillColor: Color(0xfff2f2f3),
-                  isDense: false,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                  prefixIcon:
-                      Icon(Icons.search, color: Color(0xff212435), size: 24),
-                ),
+        ],
+      ),
+    );
+  }
+
+  // Your showConfirmationDialog method here
+}
+
+class EventCard extends StatelessWidget {
+  final String eventName;
+  final String eventDate;
+  final String eventLocation;
+  final String eventDescription;
+  final String organizerInfo;
+  final double ticketPrice;
+  final String eventDuration;
+  final String imageUrl;
+  final int attendeeCount;
+  final VoidCallback onTap;
+
+  EventCard({
+    required this.eventName,
+    required this.eventDate,
+    required this.eventLocation,
+    required this.eventDescription,
+    required this.organizerInfo,
+    required this.ticketPrice,
+    required this.eventDuration,
+    required this.imageUrl,
+    required this.attendeeCount,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4.0,
+      margin: EdgeInsets.only(bottom: 16.0),
+      color: Colors.white.withOpacity(0.9),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                eventName,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+              SizedBox(height: 8.0),
+              Text('Date: $eventDate'),
+              Text('Location: $eventLocation'),
+              SizedBox(height: 8.0),
+              Text('Description: $eventDescription'),
+              Text('Organizer: $organizerInfo'),
+              Text('Ticket Price: £${ticketPrice.toStringAsFixed(2)}'),
+              Text('Duration: $eventDuration'),
+              Text('Attendees: $attendeeCount'),
+            ],
+          ),
         ),
       ),
     );

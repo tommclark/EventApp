@@ -2,8 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:setap/payment.dart';
+import 'package:setap/signin_screen.dart';
 import 'create.dart';
-import 'signup_screen.dart';
 import 'time_date_for_create.dart';
 
 void main() async {
@@ -93,7 +94,7 @@ class SplashScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => RegisterScreen()
+                          builder: (context) => LoginScreen()
                       ));
                     },
                     child: Container(

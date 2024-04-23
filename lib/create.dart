@@ -22,6 +22,12 @@ class Event extends HiveObject {
   @HiveField(5)
   final String description;
 
+  @HiveField(6)
+  final double ticketPrice;
+
+  @HiveField(7)
+  final double totalPrice;
+
   Event({
     required this.userID,
     required this.name,
@@ -29,5 +35,7 @@ class Event extends HiveObject {
     required this.time,
     required this.location,
     required this.description,
+    required this.ticketPrice,
+    required this.totalPrice,
   });
 }
