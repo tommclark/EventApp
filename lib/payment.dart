@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:setap/home.dart';
+import 'myBook.dart';
 
 class PaymentScreen extends StatefulWidget {
+  final double totalPrice;
+
+  PaymentScreen({required this.totalPrice});
+
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController cardInfoController = TextEditingController();
   final TextEditingController cvcController = TextEditingController();
@@ -17,8 +21,29 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final TextEditingController numberController = TextEditingController();
 
   String dropdownValue = '+44'; // Default value for dropdown
-
-
+  void showPaymentCompleteDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Payment Completed'),
+          content: Text('Your payment is completed and your event is being added to your event section.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+                Navigator.pushReplacement( // Navigate to MyBook page
+                  context,
+                  MaterialPageRoute(builder: (context) => BookedEventsPage()),
+                );
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,8 +151,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ],
                     ),
-                    // After 'Card Information' TextField
-                    // After 'Card Information' TextField
                     Text('Phone Number', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -183,7 +206,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         Container(), // Empty container to push the text to the right
                         Center(
                           child: Text(
-                            'Total Payable Amount: \$100', // Replace with your variable
+                            'Total Payable Amount: \$${widget.totalPrice.toStringAsFixed(2)}',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -197,7 +220,40 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     SizedBox(height: 40), // Add some spacing between the text and the button
                     MaterialButton(
                       onPressed: () {
-                        // Handle payment logic here
+                        // Show the confirmation dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Payment Confirmation'),
+                              content: Text('Are you sure you want to proceed with the payment?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Event booked successfully!'),
+                                        duration: Duration(seconds: 2),
+                                      ),
+                                    );
+                                    Navigator.pop(context); // Close the confirmation dialog
+                                    // Show the payment completed dialog
+                                    showPaymentCompleteDialog(); // Only navigate to MyBook page
+                                  },
+
+                                  child: Text('Yes'),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context); // Close the confirmation dialog
+                                  },
+                                  child: Text('No'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       color: Color(0xffc58fff),
                       child: Text(

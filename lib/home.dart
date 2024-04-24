@@ -79,13 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
-              title: Text('Profile'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Profile()));
-              },
-            ),
-            ListTile(
               title: Text('Create Events'),
               onTap: () {
                 Navigator.push(context,
@@ -196,19 +189,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         Spacer(),
-                        Container(
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(width: 3, color: Color(0xffff00f1)),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: ClipRRect(
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Profile()),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 3, color: Color(0xffff00f1)),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: ClipRRect(
                               borderRadius: BorderRadius.circular(30),
                               child: Image.asset(
                                 "assets/profilepic.jpg",
                                 height: 40,
-                              )),
-                        )
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(

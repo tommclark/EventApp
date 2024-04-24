@@ -165,7 +165,9 @@ class _EventBookingPageState extends State<EventBookingPage> {
                 // Navigate to the payment screen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PaymentScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => PaymentScreen(totalPrice: totalPrice),
+                  ),
                 );
               },
               child: Text('Book'),
