@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:setap/home.dart';
+import 'package:setap/hosthome.dart';
 import 'package:setap/signup_screen.dart';
+import 'package:setap/usermode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -169,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 // Navigate to the next screen
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                                  MaterialPageRoute(builder: (context) => UserMode()),
                                 );
                               }
                             } on FirebaseAuthException catch (e) {
@@ -210,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 // Navigate to the next screen
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                                  MaterialPageRoute(builder: (context) => UserMode()),
                                 );
                               }
                             } on FirebaseAuthException catch (e) {

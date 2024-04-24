@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:setap/home.dart';
+import 'package:setap/hosthome.dart';
 import 'myBook.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -53,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
+            MaterialPageRoute(builder: (context) => HostHomeScreen()),
           ),
         ),
         backgroundColor: Colors.transparent,
