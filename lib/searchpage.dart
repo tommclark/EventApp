@@ -3,11 +3,12 @@ import 'package:hive/hive.dart';
 import 'create.dart'; // Assuming you have the Event class defined here
 
 class Search extends StatefulWidget {
+  
   @override
-  _SearchState createState() => _SearchState();
+  SearchState createState() => SearchState();
 }
 
-class _SearchState extends State<Search> {
+class SearchState extends State<Search> {
   late List<Event> events;
   late List<Event> filteredEvents;
   late bool isSearching;
@@ -29,19 +30,16 @@ class _SearchState extends State<Search> {
   }
 
   void filterEvents(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        filteredEvents =
-            []; // define filtered events as an empty list so that the search page is empty when there is no query
-      } else {
-        filteredEvents = events
-            .where((event) =>
-                event.name.toLowerCase().contains(query.toLowerCase()) ||
-                event.location.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      }
-    });
+  if (query.isEmpty) {
+    filteredEvents = [];
+  } else {
+    filteredEvents = events
+        .where((event) =>
+            event.name.toLowerCase().contains(query.toLowerCase()) ||
+            event.location.toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +78,13 @@ class _SearchState extends State<Search> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
             child: TextField(
-              onChanged: (query) => filterEvents(query),
+              onChanged: (query) {
+                setState(() {
+                  filterEvents(query);
+                });
+              },
               decoration: InputDecoration(
-                hintText:
-                    'Search events by entering either their name or location...',
+                hintText: 'Search events by entering either their name or location...',
               ),
             ),
           ),
@@ -178,3 +179,9 @@ class EventCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
