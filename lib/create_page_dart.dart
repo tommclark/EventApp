@@ -4,10 +4,10 @@ import 'create.dart';
 
 class EventForm extends StatefulWidget {
   @override
-  _EventFormState createState() => _EventFormState();
+  EventFormState createState() => EventFormState();
 }
 
-class _EventFormState extends State<EventForm> {
+class EventFormState extends State<EventForm> {
   final TextEditingController _userIDController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
@@ -22,7 +22,7 @@ class _EventFormState extends State<EventForm> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
-  void _saveEvent(Event event) async {
+  void saveEvent(Event event) async {
     final box = await Hive.openBox<Event>('events');
     await box.add(event);
     print('Contents of Hive box "events":');
@@ -78,7 +78,7 @@ class _EventFormState extends State<EventForm> {
       totalPrice: 0,
     );
 
-    _saveEvent(event);
+    saveEvent(event);
 
     // Clear the text controllers after saving the event
     _userIDController.clear();

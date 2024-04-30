@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'create.dart';
 import 'payment.dart';
+
 class EventBookingPage extends StatefulWidget {
   @override
-  _EventBookingPageState createState() => _EventBookingPageState();
+  EventBookingPageState createState() => EventBookingPageState();
 }
 
-class _EventBookingPageState extends State<EventBookingPage> {
+class EventBookingPageState extends State<EventBookingPage> {
   late Box<Event> eventBox;
   late TextEditingController _ticketQuantityController;
-  List<String> bookedEvents = [];
+  double totalPrice = 0;
+
   @override
   void initState() {
     super.initState();
@@ -20,6 +22,12 @@ class _EventBookingPageState extends State<EventBookingPage> {
 
   Future<void> _openBox() async {
     eventBox = await Hive.openBox<Event>('events');
+  }
+
+  void updateTotalPrice(String value, double price) {
+    
+      totalPrice = price * int.parse(value);
+    
   }
 
   @override
@@ -63,8 +71,9 @@ class _EventBookingPageState extends State<EventBookingPage> {
           eventDescription: event.description,
           organizerInfo: event.userID,
           ticketPrice: event.ticketPrice,
-          totalPrice: event.totalPrice,
+          totalPrice: totalPrice,
           onTap: () => showConfirmationDialog(
+            context,
             event.name,
             event.date.toString(),
             event.location,
@@ -72,12 +81,19 @@ class _EventBookingPageState extends State<EventBookingPage> {
             event.userID,
             event.ticketPrice,
           ),
+          onChanged: (value) {
+            setState(() {
+              updateTotalPrice(value, event.ticketPrice);
+            });
+
+          },
         );
       },
     );
   }
 
   void showConfirmationDialog(
+      BuildContext context,
       String event,
       String date,
       String location,
@@ -85,94 +101,106 @@ class _EventBookingPageState extends State<EventBookingPage> {
       String organizer,
       double price,
       ) async {
-    double totalPrice = 0; // Default value
+    // Calculate the total price based on the current value of the ticket quantity field
+    updateTotalPrice(_ticketQuantityController.text, price);
 
-    try {
-      totalPrice = price * int.parse(_ticketQuantityController.text);
-    } catch (e) {
-      // Handle parsing error, e.g., set totalPrice to 0
-      print('Error parsing quantity: $e');
-    }//Calculate the total price based on ticket quantity
+    // Flag to track if the quantity is valid
+    bool isValidQuantity = _ticketQuantityController.text.isNotEmpty;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Booking Confirmation'),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Event: $event'),
-              SizedBox(height: 8),
-              Text('Date: $date'),
-              Text('Location: $location'),
-              SizedBox(height: 8),
-              Text('Description: $description'),
-              Text('Organizer: $organizer'),
-              Text('Ticket Price: £${price.toStringAsFixed(3)}'),
-              Text('Total Price: £${totalPrice.toStringAsFixed(3)}'),
-              SizedBox(height: 8),
-              Text('Select Number of Tickets:'),
-              TextFormField(
-                controller: _ticketQuantityController,
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  // Update the total price when quantity changes
-                  setState(() {
-                    totalPrice = price * int.parse(value);
-                  });
-                },
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Booking Confirmation'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Event: $event'),
+                  SizedBox(height: 8),
+                  Text('Date: $date'),
+                  Text('Location: $location'),
+                  SizedBox(height: 8),
+                  Text('Description: $description'),
+                  Text('Organizer: $organizer'),
+                  Text('Ticket Price: £${price.toStringAsFixed(3)}'),
+                  Text('Total Price: £${totalPrice.toStringAsFixed(3)}'),
+                  SizedBox(height: 8),
+                  Text('Select Number of Tickets:'),
+                  TextFormField(
+                    controller: _ticketQuantityController,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        if (value.isEmpty) {
+                          isValidQuantity = false;
+                        } else {
+                          isValidQuantity = true;
+                        }
+                        // Update the total price when quantity changes
+                        updateTotalPrice(value, price);
+                      });
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                // Open the booked events box
-                Box<Event> bookedEventsBox =
-                await Hive.openBox<Event>('booked_events');
+              actions: [
+                TextButton(
+                  onPressed: isValidQuantity
+                      ? () {
+                    Navigator.pop(context);
+                  }
+                      : null,
+                  child: Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: isValidQuantity
+                      ? () async {
+                    // Open the booked events box
+                    Box<Event> bookedEventsBox =
+                    await Hive.openBox<Event>('booked_events');
 
-                // Add the booked event to the list with total price
-                Event bookedEvent = Event(
-                  name: event,
-                  date: DateTime.parse(date),
-                  time: TimeOfDay.now(),
-                  location: location,
-                  description: description,
-                  userID: organizer,
-                  ticketPrice: price,
-                  totalPrice: totalPrice, // Store the total price
-                );
-                bookedEventsBox.add(bookedEvent);
+                    // Add the booked event to the list with total price
+                    Event bookedEvent = Event(
+                      name: event,
+                      date: DateTime.parse(date),
+                      time: TimeOfDay.now(),
+                      location: location,
+                      description: description,
+                      userID: organizer,
+                      ticketPrice: price,
+                      totalPrice: totalPrice, // Store the total price
+                    );
+                    bookedEventsBox.add(bookedEvent);
 
-                // Close the dialog
-                Navigator.pop(context);
+                    // Close the dialog
+                    Navigator.pop(context);
 
-                // Show a confirmation message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Event booked successfully!'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
+                    // Show a confirmation message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Event booked successfully!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
 
-                // Navigate to the payment screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PaymentScreen(totalPrice: totalPrice),
-                  ),
-                );
-              },
-              child: Text('Book'),
-            ),
-          ],
+                    // Navigate to the payment screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PaymentScreen(totalPrice: totalPrice),
+                      ),
+                    );
+                  }
+                      : null,
+                  child: Text('Book'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -194,6 +222,7 @@ class EventCard extends StatelessWidget {
   final double ticketPrice;
   final double totalPrice;
   final VoidCallback onTap;
+  final ValueChanged<String>? onChanged;
 
   EventCard({
     required this.eventName,
@@ -204,6 +233,7 @@ class EventCard extends StatelessWidget {
     required this.ticketPrice,
     required this.totalPrice,
     required this.onTap,
+    this.onChanged,
   });
 
   @override
@@ -230,6 +260,9 @@ class EventCard extends StatelessWidget {
               Text('Description: $eventDescription'),
               Text('Organizer: $organizerInfo'),
               Text('Ticket Price: £${ticketPrice.toStringAsFixed(3)}'),
+              Text('Total Price: £${totalPrice.toStringAsFixed(3)}'),
+              SizedBox(height: 8.0),
+
             ],
           ),
         ),
@@ -237,4 +270,3 @@ class EventCard extends StatelessWidget {
     );
   }
 }
-//time: TimeOfDay(hour: 0, minute: 0),

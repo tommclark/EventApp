@@ -22,7 +22,7 @@ void main() async {
   Hive.registerAdapter(TimeOfDayAdapter());
   Hive.registerAdapter(EventAdapter()); // Register your adapter
   await Hive.openBox<Event>('events'); // Open the box for events
-  runApp(MaterialApp(home: RegisterScreen(auth: FirebaseAuth.instance)));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
