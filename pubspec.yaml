@@ -49,6 +49,7 @@ dependencies:
 
 
 dev_dependencies:
+  test: any
   flutter_test:
     sdk: flutter
   hive_test: ^1.0.0

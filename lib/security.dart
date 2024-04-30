@@ -1,5 +1,3 @@
-import 'dart:html';
-import 'settings.dart';
 import 'package:flutter/material.dart';
 
 class Security extends StatelessWidget {

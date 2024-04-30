@@ -4,7 +4,10 @@ import 'package:setap/signin_screen.dart';
 
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key? key}) : super(key: key);
+  final FirebaseAuth auth;
+
+  RegisterScreen({Key? key, required this.auth}) : super(key: key);
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }

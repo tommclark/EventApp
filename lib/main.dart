@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:setap/payment.dart';
 import 'package:setap/signin_screen.dart';
+import 'package:setap/signup_screen.dart';
 import 'create.dart';
 import 'time_date_for_create.dart';
 
@@ -21,7 +22,7 @@ void main() async {
   Hive.registerAdapter(TimeOfDayAdapter());
   Hive.registerAdapter(EventAdapter()); // Register your adapter
   await Hive.openBox<Event>('events'); // Open the box for events
-  runApp(const MyApp());
+  runApp(MaterialApp(home: RegisterScreen(auth: FirebaseAuth.instance)));
 }
 
 class MyApp extends StatelessWidget {

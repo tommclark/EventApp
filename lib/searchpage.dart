@@ -3,7 +3,6 @@ import 'package:hive/hive.dart';
 import 'create.dart'; // Assuming you have the Event class defined here
 
 class Search extends StatefulWidget {
-  
   @override
   SearchState createState() => SearchState();
 }
@@ -17,29 +16,36 @@ class SearchState extends State<Search> {
   void initState() {
     super.initState();
     isSearching = true;
-    loadEvents();
+    setState(() {
+      loadEvents();
+    });
   }
 
   Future<void> loadEvents() async {
     var box = await Hive.openBox<Event>('events');
-    setState(() {
-      events = box.values.toList();
-      filteredEvents = [];
-      isSearching = false;
-    });
+
+    events = box.values.toList();
+    filteredEvents = [];
+    isSearching = false;
+  }
+
+  Future<void> addEvent(Event event) async {
+    final box = await Hive.openBox<Event>('events');
+    await box.add(event);
+    await box.close();
   }
 
   void filterEvents(String query) {
-  if (query.isEmpty) {
-    filteredEvents = [];
-  } else {
-    filteredEvents = events
-        .where((event) =>
-            event.name.toLowerCase().contains(query.toLowerCase()) ||
-            event.location.toLowerCase().contains(query.toLowerCase()))
-        .toList();
+    if (query.isEmpty) {
+      filteredEvents = [];
+    } else {
+      filteredEvents = events
+          .where((event) =>
+              event.name.toLowerCase().contains(query.toLowerCase()) ||
+              event.location.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +90,8 @@ class SearchState extends State<Search> {
                 });
               },
               decoration: InputDecoration(
-                hintText: 'Search events by entering either their name or location...',
+                hintText:
+                    'Search events by entering either their name or location...',
               ),
             ),
           ),
@@ -100,8 +107,8 @@ class SearchState extends State<Search> {
                         eventLocation: filteredEvents[index].location,
                         eventDescription: filteredEvents[index].description,
                         organizerInfo: filteredEvents[index].userID,
-                        ticketPrice:
-                            0, // Change this according to your data model
+                        ticketPrice: filteredEvents[index]
+                            .ticketPrice, // Change this according to your data model
                         eventDuration:
                             '', // Change this according to your data model
                         imageUrl:
@@ -179,9 +186,3 @@ class EventCard extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
