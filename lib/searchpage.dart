@@ -50,22 +50,23 @@ class SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffffffff),
+      backgroundColor: Color(0xff331f46),
       appBar: AppBar(
         elevation: 4,
-        centerTitle: false,
+        centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: Color(0xff3a57e8),
+        backgroundColor: Color(0xffc58fff),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,
+          
         ),
         title: Text(
-          "AppBar",
+          "Search Events",
           style: TextStyle(
             fontWeight: FontWeight.w400,
             fontStyle: FontStyle.normal,
-            fontSize: 14,
-            color: Color(0xff000000),
+            fontSize: 16,
+            color: Color(0xffffffff),
           ),
         ),
         leading: InkWell(
@@ -84,6 +85,8 @@ class SearchState extends State<Search> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
             child: TextField(
+              style: TextStyle(
+                  color: Colors.white),
               onChanged: (query) {
                 setState(() {
                   filterEvents(query);
@@ -92,6 +95,9 @@ class SearchState extends State<Search> {
               decoration: InputDecoration(
                 hintText:
                     'Search events by entering either their name or location...',
+                    hintStyle: TextStyle(
+                      color: Colors.white
+                      )
               ),
             ),
           ),
@@ -158,7 +164,7 @@ class EventCard extends StatelessWidget {
     return Card(
       elevation: 4.0,
       margin: EdgeInsets.only(bottom: 16.0),
-      color: Colors.white.withOpacity(0.9),
+      color: Color(0xffc58fff),
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -168,17 +174,17 @@ class EventCard extends StatelessWidget {
             children: [
               Text(
                 eventName,
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               SizedBox(height: 8.0),
-              Text('Date: $eventDate'),
-              Text('Location: $eventLocation'),
+              Text('Date: $eventDate', style: TextStyle(color: Colors.white)),
+              Text('Location: $eventLocation', style: TextStyle(color: Colors.white)),
               SizedBox(height: 8.0),
-              Text('Description: $eventDescription'),
-              Text('Organizer: $organizerInfo'),
-              Text('Ticket Price: £${ticketPrice.toStringAsFixed(2)}'),
-              Text('Duration: $eventDuration'),
-              Text('Attendees: $attendeeCount'),
+              Text('Description: $eventDescription', style: TextStyle(color: Colors.white)),
+              Text('Organizer: $organizerInfo', style: TextStyle(color: Colors.white)),
+              Text('Ticket Price: Â£${ticketPrice.toStringAsFixed(2)}', style: TextStyle(color: Colors.white)),
+              Text('Duration: $eventDuration', style: TextStyle(color: Colors.white)),
+              Text('Attendees: $attendeeCount', style: TextStyle(color: Colors.white)),
             ],
           ),
         ),

@@ -27,26 +27,46 @@ class _BookedEventsPageState extends State<BookedEventsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff331f46),
       appBar: AppBar(
-        title: Text('Your Events'),
+        centerTitle: true,
+        backgroundColor: Color(0xffc58fff),
+        title: Text('Your Events',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16),
+        ),
       ),
       body: _bookedEvents.isEmpty
-          ? Center(child: Text('No events booked yet.'))
+          ? Center(child: Text('No events booked yet.',
+          style: TextStyle(
+            color: Colors.white)
+            )
+          )
           : ListView.builder(
         itemCount: _bookedEvents.length,
         itemBuilder: (context, index) {
           final event = _bookedEvents[index];
           return ListTile(
-            title: Text(event.name),
+            tileColor: Color(0xffc58fff),
+            title: Text(
+              event.name,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Date: ${event.date.toString()}'),
-                Text('Location: ${event.location}'),
-                Text('Description: ${event.description}'),
-                Text('Organizer: ${event.userID}'),
-                Text('Ticket Price: £${event.ticketPrice.toStringAsFixed(3)}'),
-                Text('Total Price: £${event.totalPrice.toStringAsFixed(3)}'), // Display total price
+                Text('Date: ${event.date.toString()}',
+                style: TextStyle(
+                  color: Colors.white,
+                )),
+                Text('Location: ${event.location}', style: TextStyle(color: Colors.white)),
+                Text('Description: ${event.description}', style: TextStyle(color: Colors.white)),
+                Text('Organizer: ${event.userID}', style: TextStyle(color: Colors.white)),
+                Text('Ticket Price: £${event.ticketPrice.toStringAsFixed(3)}', style: TextStyle(color: Colors.white)),
+                Text('Total Price: £${event.totalPrice.toStringAsFixed(3)}', style: TextStyle(color: Colors.white)), // Display total price
               ],
             ),
 

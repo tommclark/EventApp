@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:setap/signin_screen.dart';
 
-
 class RegisterScreen extends StatefulWidget {
   final FirebaseAuth auth;
 
@@ -79,17 +78,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         hintText: "Name",
                         hintStyle: TextStyle(
@@ -102,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fillColor: Color(0xfff2f2f3),
                         isDense: false,
                         contentPadding:
-                        EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                       ),
                     ),
                   ),
@@ -123,17 +122,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         hintText: "Email Address",
                         hintStyle: TextStyle(
@@ -146,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fillColor: Color(0xfff2f2f3),
                         isDense: false,
                         contentPadding:
-                        EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                       ),
                     ),
                   ),
@@ -167,17 +166,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                           borderSide:
-                          BorderSide(color: Color(0x00ffffff), width: 1),
+                              BorderSide(color: Color(0x00ffffff), width: 1),
                         ),
                         hintText: "Password",
                         hintStyle: TextStyle(
@@ -190,7 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fillColor: Color(0xfff2f2f3),
                         isDense: false,
                         contentPadding:
-                        EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                         suffixIcon: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -198,7 +197,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             });
                           },
                           child: Icon(
-                            _isObscure ? Icons.visibility : Icons.visibility_off,
+                            _isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                             color: Color(0x797a33fb),
                             size: 20,
                           ),
@@ -219,57 +220,74 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(50, 30, 50, 16),
                     child: MaterialButton(
-                       onPressed: ()  async {
-                         String password = _passwordController.text.trim();
-                         if (password.length < 4) {
-                           ScaffoldMessenger.of(context).showSnackBar(
-                             SnackBar(content: Text('Password should be at least 4 characters')),
-                           );
-                           return;
-                         }
-                         if (!RegExp(r'[a-z]').hasMatch(password)) {
-                           ScaffoldMessenger.of(context).showSnackBar(
-                             SnackBar(content: Text('Password should contain at least one lowercase letter')),
-                           );
-                           return;
-                         }
-                         if (!RegExp(r'[A-Z]').hasMatch(password)) {
-                           ScaffoldMessenger.of(context).showSnackBar(
-                             SnackBar(content: Text('Password should contain at least one uppercase letter')),
-                           );
-                           return;
-                         }
-                         if (!RegExp(r'[0-9]').hasMatch(password)) {
-                           ScaffoldMessenger.of(context).showSnackBar(
-                             SnackBar(content: Text('Password should contain at least one number')),
-                           );
-                           return;
-                         }
+                      onPressed: () async {
+                        String password = _passwordController.text.trim();
+                        if (password.length < 4) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Password should be at least 4 characters')),
+                          );
+                          return;
+                        }
+                        if (!RegExp(r'[a-z]').hasMatch(password)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Password should contain at least one lowercase letter')),
+                          );
+                          return;
+                        }
+                        if (!RegExp(r'[A-Z]').hasMatch(password)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Password should contain at least one uppercase letter')),
+                          );
+                          return;
+                        }
+                        if (!RegExp(r'[0-9]').hasMatch(password)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Password should contain at least one number')),
+                          );
+                          return;
+                        }
                         try {
-                          UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+                          UserCredential userCredential =
+                              await _auth.createUserWithEmailAndPassword(
                             email: _emailController.text.trim(),
                             password: _passwordController.text.trim(),
                           );
                           if (userCredential.user != null) {
-                            userCredential.user!.updateDisplayName(_nameController.text.trim());
+                            userCredential.user!
+                                .updateDisplayName(_nameController.text.trim());
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Account created successfully')),
+                              SnackBar(
+                                  content:
+                                      Text('Account created successfully')),
                             );
                             // Navigate to Signin page
                             await Future.delayed(Duration(seconds: 1));
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
                             );
                           }
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('The password provided is too weak.')),
+                              SnackBar(
+                                  content: Text(
+                                      'The password provided is too weak.')),
                             );
                           } else if (e.code == 'email-already-in-use') {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('An account already exists for that email.')),
+                              SnackBar(
+                                  content: Text(
+                                      'An account already exists for that email.')),
                             );
                           }
                         } catch (e) {

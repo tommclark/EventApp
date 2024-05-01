@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:setap/create_page_dart.dart'; // Import the file containing the _saveEvent function
-import 'package:setap/create.dart'; // Import the Event class if not already imported
+import 'package:setap/create_page_dart.dart'; 
+import 'package:setap/create.dart'; 
 import 'package:flutter/material.dart';
 import 'package:hive_test/hive_test.dart';
 
 
 class EventAdapter extends TypeAdapter<Event> {
   @override
-  final int typeId = 0; // Unique identifier for your class
+  final int typeId = 0; 
 
   @override
   Event read(BinaryReader reader) {
@@ -40,9 +40,9 @@ class EventAdapter extends TypeAdapter<Event> {
 
 void main() {
   setUpAll(() async {
-    // Register the EventAdapter before opening the Hive box
+
     Hive.registerAdapter(EventAdapter());
-    // Initialize Hive with a temporary directory for testing.
+
     await setUpTestHive();
   });
 
@@ -60,16 +60,18 @@ void main() {
   );
 
   EventFormState eventFormState = EventFormState();
-  // Open Hive box
+
   Box<Event> box = await Hive.openBox<Event>('events');
 
-  // Call the _saveEvent function
+
   eventFormState.saveEvent(event);
 
-  // Check if the box is not empty
+  
   if (box.isNotEmpty) {
-    // Retrieve the saved event from the Hive box
-    Event savedEvent = box.getAt(0)!; // Assuming you are saving only one event
+
+    Event savedEvent = box.getAt(0)!; 
+
+    
 
     // Assert that the saved event matches the original event
     expect(savedEvent.userID, event.userID);

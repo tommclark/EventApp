@@ -4,10 +4,10 @@ import 'create.dart';
 
 class EventForm extends StatefulWidget {
   @override
-  EventFormState createState() => EventFormState();
+  _EventFormState createState() => _EventFormState();
 }
 
-class EventFormState extends State<EventForm> {
+class _EventFormState extends State<EventForm> {
   final TextEditingController _userIDController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
@@ -22,7 +22,7 @@ class EventFormState extends State<EventForm> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
-  void saveEvent(Event event) async {
+  void _saveEvent(Event event) async {
     final box = await Hive.openBox<Event>('events');
     await box.add(event);
     print('Contents of Hive box "events":');
@@ -78,7 +78,7 @@ class EventFormState extends State<EventForm> {
       totalPrice: 0,
     );
 
-    saveEvent(event);
+    _saveEvent(event);
 
     // Clear the text controllers after saving the event
     _userIDController.clear();
@@ -99,8 +99,15 @@ class EventFormState extends State<EventForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff331f46),
       appBar: AppBar(
-        title: Text('Add Event'),
+        title: Text('Add Event',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16)
+        ),
+        backgroundColor: Color(0xffc58fff),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -110,11 +117,21 @@ class EventFormState extends State<EventForm> {
             children: [
               TextFormField(
                 controller: _userIDController,
-                decoration: InputDecoration(labelText: 'User ID'),
+                style: TextStyle(
+                  color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'User ID',
+                  labelStyle: TextStyle(
+                  color: Colors.white)),
               ),
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: 'Name'),
+                style: TextStyle(
+                  color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  labelStyle: TextStyle(
+                  color: Colors.white)),
               ),
               ElevatedButton(
                 onPressed: () => _selectDate(context),
@@ -123,7 +140,9 @@ class EventFormState extends State<EventForm> {
               _selectedDate != null
                   ? Text(
                 'Selected Date: ${_selectedDate!.toString()}',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16),
               )
                   : SizedBox(), // Show selected date if available
               ElevatedButton(
@@ -133,11 +152,15 @@ class EventFormState extends State<EventForm> {
               _selectedTime != null
                   ? Text(
                 'Selected Time: ${_selectedTime!.format(context)}',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16),
               )
                   : SizedBox(), // Show selected time if available
               TextFormField(
-                controller: _locationController,
+                controller: _locationController, 
+                style: TextStyle(
+                  color: Colors.white),
                 readOnly: true,
                 onTap: () {
                   _showLocationDialog(context, _streetNameController, _streetNumberController, _postalCodeController,
@@ -145,17 +168,31 @@ class EventFormState extends State<EventForm> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Location',
+                  labelStyle: TextStyle(
+                  color: Colors.white),
                   hintText: 'Select the Location for this event',
+                  hintStyle: TextStyle(
+                  color: Colors.white),
                 ),
               ),
               TextFormField(
                 controller: _descriptionController,
-                decoration: InputDecoration(labelText: 'Description'),
+                style: TextStyle(
+                  color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: TextStyle(
+                  color: Colors.white)),
               ),
               TextFormField(
                 controller: _ticketPriceController, // Use the ticket price controller here
+                style: TextStyle(
+                  color: Colors.white),
                 keyboardType: TextInputType.numberWithOptions(decimal: true), // Allow decimal input
-                decoration: InputDecoration(labelText: 'Ticket Price'),
+                decoration: InputDecoration(
+                  labelText: 'Ticket Price',
+                  labelStyle: TextStyle(
+                  color: Colors.white)),
               ),
               ElevatedButton(
                 onPressed: _submitForm,

@@ -57,6 +57,7 @@ class _HomeScreenState extends State<HostHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: Drawer(
+        backgroundColor: Color(0xffc58fff),
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -80,7 +81,11 @@ class _HomeScreenState extends State<HostHomeScreen> {
               ),
             ),
             ListTile(
-              title: Text('Switch User Mode'),
+              title: Text('Switch User Mode',
+               style: TextStyle(
+                color: Colors.white,
+              ),
+              ),
               onTap: () {
                 Navigator.push(
                     context,
@@ -90,14 +95,22 @@ class _HomeScreenState extends State<HostHomeScreen> {
               },
             ),
             ListTile(
-              title: Text('Create Events'),
+              title: Text('Create Events',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => EventForm()));
               },
             ),
             ListTile(
-              title: Text('Search Events'),
+              title: Text('Search Events',
+               style: TextStyle(
+                color: Colors.white,
+              ),
+              ),
               onTap: () {
                 // Close the box when navigating to the search page
                 eventBox.close();
@@ -109,7 +122,11 @@ class _HomeScreenState extends State<HostHomeScreen> {
               },
             ),
             ListTile(
-              title: Text('Logout'),
+              title: Text('Logout',
+               style: TextStyle(
+                color: Colors.white,
+              ),
+              ),
               onTap: () async {
                 await _auth.signOut();
                 Navigator.pushReplacement(
@@ -468,7 +485,7 @@ class EventCard extends StatelessWidget {
     return Card(
       elevation: 4.0,
       margin: EdgeInsets.only(bottom: 16.0),
-      color: Colors.white.withOpacity(0.9),
+      color: Color(0xffc58fff),
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -478,17 +495,17 @@ class EventCard extends StatelessWidget {
             children: [
               Text(
                 eventName,
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               SizedBox(height: 8.0),
-              Text('Date: $eventDate'),
-              Text('Location: $eventLocation'),
+              Text('Date: $eventDate', style: TextStyle(color: Colors.white)),
+              Text('Location: $eventLocation', style: TextStyle(color: Colors.white)),
               SizedBox(height: 8.0),
-              Text('Description: $eventDescription'),
-              Text('Organizer: $organizerInfo'),
-              Text('Ticket Price: £${ticketPrice.toStringAsFixed(2)}'),
-              Text('Duration: $eventDuration'),
-              Text('Attendees: $attendeeCount'),
+              Text('Description: $eventDescription', style: TextStyle(color: Colors.white)),
+              Text('Organizer: $organizerInfo', style: TextStyle(color: Colors.white)),
+              Text('Ticket Price: £${ticketPrice.toStringAsFixed(2)}', style: TextStyle(color: Colors.white)),
+              Text('Duration: $eventDuration', style: TextStyle(color: Colors.white)),
+              Text('Attendees: $attendeeCount', style: TextStyle(color: Colors.white)),
             ],
           ),
         ),

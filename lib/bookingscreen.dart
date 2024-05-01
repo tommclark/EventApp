@@ -25,26 +25,24 @@ class EventBookingPageState extends State<EventBookingPage> {
   }
 
   void updateTotalPrice(String value, double price) {
-    
-      totalPrice = price * int.parse(value);
-    
+    totalPrice = price * int.parse(value);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff331f46),
       appBar: AppBar(
-        title: Text('Event Booking'),
+        centerTitle: true,
+        backgroundColor: Color(0xffc58fff),
+        title: Text('Event Booking',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16),
+        ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.blue.shade200, Colors.blue.shade800],
-          ),
-        ),
-        child: FutureBuilder(
+          child: FutureBuilder(
           future: _openBox(),
           builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
@@ -85,7 +83,6 @@ class EventBookingPageState extends State<EventBookingPage> {
             setState(() {
               updateTotalPrice(value, event.ticketPrice);
             });
-
           },
         );
       },
@@ -93,14 +90,14 @@ class EventBookingPageState extends State<EventBookingPage> {
   }
 
   void showConfirmationDialog(
-      BuildContext context,
-      String event,
-      String date,
-      String location,
-      String description,
-      String organizer,
-      double price,
-      ) async {
+    BuildContext context,
+    String event,
+    String date,
+    String location,
+    String description,
+    String organizer,
+    double price,
+  ) async {
     // Calculate the total price based on the current value of the ticket quantity field
     updateTotalPrice(_ticketQuantityController.text, price);
 
@@ -135,7 +132,16 @@ class EventBookingPageState extends State<EventBookingPage> {
                     onChanged: (value) {
                       setState(() {
                         if (value.isEmpty) {
+                          switch (!isValidQuantity && value.isEmpty) {
+                            case true:
+                              _ticketQuantityController =
+                                  TextEditingController(text: '1');
+                            case false:
+                              isValidQuantity = true;
+                          }
+                          
                           isValidQuantity = false;
+                          
                         } else {
                           isValidQuantity = true;
                         }
@@ -150,51 +156,53 @@ class EventBookingPageState extends State<EventBookingPage> {
                 TextButton(
                   onPressed: isValidQuantity
                       ? () {
-                    Navigator.pop(context);
-                  }
+                          _ticketQuantityController =
+                              TextEditingController(text: '1');
+                          Navigator.pop(context);
+                        }
                       : null,
                   child: Text('Cancel'),
                 ),
                 TextButton(
                   onPressed: isValidQuantity
                       ? () async {
-                    // Open the booked events box
-                    Box<Event> bookedEventsBox =
-                    await Hive.openBox<Event>('booked_events');
+                          // Open the booked events box
+                          Box<Event> bookedEventsBox =
+                              await Hive.openBox<Event>('booked_events');
 
-                    // Add the booked event to the list with total price
-                    Event bookedEvent = Event(
-                      name: event,
-                      date: DateTime.parse(date),
-                      time: TimeOfDay.now(),
-                      location: location,
-                      description: description,
-                      userID: organizer,
-                      ticketPrice: price,
-                      totalPrice: totalPrice, // Store the total price
-                    );
-                    bookedEventsBox.add(bookedEvent);
+                          // Add the booked event to the list with total price
+                          Event bookedEvent = Event(
+                            name: event,
+                            date: DateTime.parse(date),
+                            time: TimeOfDay.now(),
+                            location: location,
+                            description: description,
+                            userID: organizer,
+                            ticketPrice: price,
+                            totalPrice: totalPrice, // Store the total price
+                          );
+                          bookedEventsBox.add(bookedEvent);
 
-                    // Close the dialog
-                    Navigator.pop(context);
+                          // Close the dialog
+                          Navigator.pop(context);
 
-                    // Show a confirmation message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Event booked successfully!'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
+                          // Show a confirmation message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Event booked successfully!'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
 
-                    // Navigate to the payment screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PaymentScreen(totalPrice: totalPrice),
-                      ),
-                    );
-                  }
+                          // Navigate to the payment screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PaymentScreen(totalPrice: totalPrice),
+                            ),
+                          );
+                        }
                       : null,
                   child: Text('Book'),
                 ),
@@ -241,7 +249,7 @@ class EventCard extends StatelessWidget {
     return Card(
       elevation: 4.0,
       margin: EdgeInsets.only(bottom: 16.0),
-      color: Colors.white.withOpacity(0.9),
+      color: Color(0xffc58fff),
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -251,18 +259,15 @@ class EventCard extends StatelessWidget {
             children: [
               Text(
                 eventName,
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               SizedBox(height: 8.0),
-              Text('Date: $eventDate'),
-              Text('Location: $eventLocation'),
+              Text('Date: $eventDate', style: TextStyle(color: Colors.white)),
+              Text('Location: $eventLocation', style: TextStyle(color: Colors.white)),
               SizedBox(height: 8.0),
-              Text('Description: $eventDescription'),
-              Text('Organizer: $organizerInfo'),
-              Text('Ticket Price: £${ticketPrice.toStringAsFixed(3)}'),
-              Text('Total Price: £${totalPrice.toStringAsFixed(3)}'),
-              SizedBox(height: 8.0),
-
+              Text('Description: $eventDescription', style: TextStyle(color: Colors.white)),
+              Text('Organizer: $organizerInfo', style: TextStyle(color: Colors.white)),
+              Text('Ticket Price: £${ticketPrice.toStringAsFixed(3)}', style: TextStyle(color: Colors.white)),
             ],
           ),
         ),

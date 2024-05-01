@@ -5,9 +5,9 @@ import 'package:setap/myBook.dart';
 import 'package:setap/payment.dart';
 
 void main() {
-  // Helper function to create and return the widget under test
+  
 Widget createPaymentScreen() => MediaQuery(
-  data: MediaQueryData(size: Size(1000, 800)), // Adjust the size as needed
+  data: MediaQueryData(size: Size(1000, 800)),
   child: MaterialApp(
     home: PaymentScreen(totalPrice: 99.99),
   ),
@@ -18,13 +18,13 @@ Widget createPaymentScreen() => MediaQuery(
     await tester.pumpWidget(createPaymentScreen());
 
     // Verify all input fields are present
-    expect(find.byType(TextField), findsNWidgets(6)); // Adjust the count if you have different number of TextFields
+    expect(find.byType(TextField), findsNWidgets(6)); 
     expect(find.text('Email'), findsOneWidget);
     expect(find.text('Name on Card'), findsOneWidget);
     expect(find.text('Card Information'), findsOneWidget);
     expect(find.text('Phone Number'), findsOneWidget);
 
-    // Verify the Pay Now button is present
+
     expect(find.text('Pay Now'), findsOneWidget);
   });
 
@@ -33,12 +33,12 @@ Widget createPaymentScreen() => MediaQuery(
 
     // Tap the Pay Now button
     await tester.tap(find.text('Pay Now'));
-    await tester.pump(); // Rebuild the widget after the state has changed
-    await tester.pumpAndSettle(); // Wait for any animations to settle
+    await tester.pump();
+    await tester.pumpAndSettle(); 
 
-    // This part simulates the user confirming the payment
+
     await tester.tap(find.text('Yes'));
-    await tester.pumpAndSettle(); // Process the navigation and potential animations
+    await tester.pumpAndSettle();
 
     // Check if the MyBook page is displayed after confirmation
     // expect(find.byType(BookedEventsPage), findsOneWidget);

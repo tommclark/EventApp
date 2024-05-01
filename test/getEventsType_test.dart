@@ -7,10 +7,10 @@ void main() {
     // Call the getEventTypes function to get the list of event types
     List<EventTypeModel> eventTypes = getEventTypes();
 
-    // Assert that the length of the list is as expected
+  
     expect(eventTypes.length, 5);
 
-    // Assert each EventTypeModel in the list has the expected properties
+    // Test that each EventTypeModel in the list has the expected properties
     expect(eventTypes[0].imgAssetPath, "assets/concert.png");
     expect(eventTypes[0].eventType, "Concert");
 
@@ -21,7 +21,7 @@ void main() {
     expect(eventTypes[2].eventType, "Education");
 
     expect(eventTypes[3].imgAssetPath, "assets/visitors.png");
-    expect(eventTypes[3].eventType, "Exibitions"); // Typo here, should it be "Exhibitions"?
+    expect(eventTypes[3].eventType, "Exibitions"); 
 
     expect(eventTypes[4].imgAssetPath, "assets/seminar.png");
     expect(eventTypes[4].eventType, "Seminar");
