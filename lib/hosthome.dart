@@ -344,7 +344,7 @@ class _HomeScreenState extends State<HostHomeScreen> {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
                             return ListView.builder(
-                              itemCount: eventBox.length,
+                              itemCount: eventBox.length > 3 ? 3 : eventBox.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 Event event = eventBox.getAt(index)!;
@@ -354,7 +354,7 @@ class _HomeScreenState extends State<HostHomeScreen> {
                                   eventLocation: event.location,
                                   eventDescription: event.description,
                                   organizerInfo: event.userID,
-                                  ticketPrice: 0,
+                                  ticketPrice: event.ticketPrice,
                                   imageUrl: '',
                                   onTap: () {},
                                 );
