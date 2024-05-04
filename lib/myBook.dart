@@ -98,30 +98,52 @@ class _BookedEventsPageState extends State<BookedEventsPage> {
   }
 
   void _showDeleteConfirmationDialog(BuildContext context, Event event) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirm Deletion'),
-          content: Text('Are you sure you want to cancel this event?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('No'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _cancelEvent(event); // Call _cancelEvent after popping the dialog
-              },
-              child: Text('Yes'),
-            ),
-          ],
-        );
-      },
-    );
+    // Check if the event date is within two days from the present date
+    DateTime twoDaysFromNow = DateTime.now().add(Duration(days: 2));
+    if (event.date.isBefore(twoDaysFromNow)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Cannot Cancel Event'),
+            content: Text('You cannot cancel this event because it is within two days from the present date.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirm Deletion'),
+            content: Text('Are you sure you want to cancel this event?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                  _cancelEvent(event); // Call _cancelEvent after popping the dialog
+                },
+                child: Text('Yes'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   void _cancelEvent(Event event) async {
