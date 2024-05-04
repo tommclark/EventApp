@@ -115,12 +115,8 @@ class SearchState extends State<Search> {
                         organizerInfo: filteredEvents[index].userID,
                         ticketPrice: filteredEvents[index]
                             .ticketPrice, // Change this according to your data model
-                        eventDuration:
-                            '', // Change this according to your data model
                         imageUrl:
                             '', // Change this according to your data model
-                        attendeeCount:
-                            0, // Change this according to your data model
                         onTap: () {},
                       );
                     },
@@ -141,9 +137,7 @@ class EventCard extends StatelessWidget {
   final String eventDescription;
   final String organizerInfo;
   final double ticketPrice;
-  final String eventDuration;
   final String imageUrl;
-  final int attendeeCount;
   final VoidCallback onTap;
 
   EventCard({
@@ -153,9 +147,7 @@ class EventCard extends StatelessWidget {
     required this.eventDescription,
     required this.organizerInfo,
     required this.ticketPrice,
-    required this.eventDuration,
     required this.imageUrl,
-    required this.attendeeCount,
     required this.onTap,
   });
 
@@ -183,8 +175,6 @@ class EventCard extends StatelessWidget {
               Text('Description: $eventDescription', style: TextStyle(color: Colors.white)),
               Text('Organizer: $organizerInfo', style: TextStyle(color: Colors.white)),
               Text('Ticket Price: Â£${ticketPrice.toStringAsFixed(2)}', style: TextStyle(color: Colors.white)),
-              Text('Duration: $eventDuration', style: TextStyle(color: Colors.white)),
-              Text('Attendees: $attendeeCount', style: TextStyle(color: Colors.white)),
             ],
           ),
         ),

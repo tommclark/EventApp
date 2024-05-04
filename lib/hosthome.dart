@@ -355,9 +355,7 @@ class _HomeScreenState extends State<HostHomeScreen> {
                                   eventDescription: event.description,
                                   organizerInfo: event.userID,
                                   ticketPrice: 0,
-                                  eventDuration: '',
                                   imageUrl: '',
-                                  attendeeCount: 0,
                                   onTap: () {},
                                 );
                               },
@@ -462,9 +460,7 @@ class EventCard extends StatelessWidget {
   final String eventDescription;
   final String organizerInfo;
   final double ticketPrice;
-  final String eventDuration;
   final String imageUrl;
-  final int attendeeCount;
   final VoidCallback onTap;
 
   EventCard({
@@ -474,9 +470,7 @@ class EventCard extends StatelessWidget {
     required this.eventDescription,
     required this.organizerInfo,
     required this.ticketPrice,
-    required this.eventDuration,
     required this.imageUrl,
-    required this.attendeeCount,
     required this.onTap,
   });
 
@@ -504,8 +498,7 @@ class EventCard extends StatelessWidget {
               Text('Description: $eventDescription', style: TextStyle(color: Colors.white)),
               Text('Organizer: $organizerInfo', style: TextStyle(color: Colors.white)),
               Text('Ticket Price: £${ticketPrice.toStringAsFixed(2)}', style: TextStyle(color: Colors.white)),
-              Text('Duration: $eventDuration', style: TextStyle(color: Colors.white)),
-              Text('Attendees: $attendeeCount', style: TextStyle(color: Colors.white)),
+              
             ],
           ),
         ),

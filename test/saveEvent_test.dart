@@ -46,7 +46,7 @@ void main() {
     await setUpTestHive();
   });
 
-  test('Testing _saveEvent function', () async {
+  test('Testing saveEvent function', () async {
   // Mock event data
   Event event = Event(
     userID: '1',
