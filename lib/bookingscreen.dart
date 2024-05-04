@@ -186,14 +186,6 @@ class EventBookingPageState extends State<EventBookingPage> {
                           // Close the dialog
                           Navigator.pop(context);
 
-                          // Show a confirmation message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Event booked successfully!'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-
                           // Navigate to the payment screen
                           Navigator.push(
                             context,
