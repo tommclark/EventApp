@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'create.dart'; // Assuming you have the Event class defined here
+import 'create.dart'; 
 
 class Search extends StatefulWidget {
   @override
@@ -114,9 +114,9 @@ class SearchState extends State<Search> {
                         eventDescription: filteredEvents[index].description,
                         organizerInfo: filteredEvents[index].userID,
                         ticketPrice: filteredEvents[index]
-                            .ticketPrice, // Change this according to your data model
+                            .ticketPrice, 
                         imageUrl:
-                            '', // Change this according to your data model
+                            '', 
                         onTap: () {},
                       );
                     },
@@ -127,7 +127,7 @@ class SearchState extends State<Search> {
     );
   }
 
-  // Your showConfirmationDialog method here
+  
 }
 
 class EventCard extends StatelessWidget {
@@ -174,7 +174,7 @@ class EventCard extends StatelessWidget {
               SizedBox(height: 8.0),
               Text('Description: $eventDescription', style: TextStyle(color: Colors.white)),
               Text('Organizer: $organizerInfo', style: TextStyle(color: Colors.white)),
-              Text('Ticket Price: Â£${ticketPrice.toStringAsFixed(2)}', style: TextStyle(color: Colors.white)),
+              Text('Ticket Price: £${ticketPrice.toStringAsFixed(2)}', style: TextStyle(color: Colors.white)),
             ],
           ),
         ),

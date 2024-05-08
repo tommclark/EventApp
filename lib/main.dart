@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:setap/signin_screen.dart';
-import 'package:setap/signup_screen.dart';
 import 'create.dart';
 import 'time_date_for_create.dart';
 
@@ -20,7 +18,7 @@ void main() async {
   );
   await Hive.initFlutter();
   Hive.registerAdapter(TimeOfDayAdapter());
-  Hive.registerAdapter(EventAdapter()); // Register your adapter
+  Hive.registerAdapter(EventAdapter()); 
   await Hive.openBox<Event>('events'); // Open the box for events
   runApp(MyApp());
 }
@@ -28,12 +26,12 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Event App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -52,7 +50,7 @@ class SplashScreen extends StatelessWidget {
             Container(
               child: Image.asset("assets/backdrop.jpg",
                 fit: BoxFit.cover, // This line makes the image cover the entire screen
-                height: double.infinity, // These two lines are needed to make the image take up the full screen
+                height: double.infinity, // needed to make the image take up the full screen
                 width: double.infinity),
             ),
             Container(

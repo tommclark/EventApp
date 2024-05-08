@@ -65,15 +65,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     padding: EdgeInsets.fromLTRB(50, 30, 50, 16),
                     child: TextField(
                       controller: _nameController,
-                      // obscureText: false,
-                      // textAlign: TextAlign.start,
-                      // maxLines: 1,
-                      // style: TextStyle(
-                      //   fontWeight: FontWeight.w400,
-                      //   fontStyle: FontStyle.normal,
-                      //   fontSize: 14,
-                      //   color: Color(0xff000000),
-                      // ),
                       decoration: InputDecoration(
                         disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),

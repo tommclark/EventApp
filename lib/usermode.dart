@@ -73,7 +73,7 @@ class _UserModeState extends State<UserMode> with SingleTickerProviderStateMixin
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => HostHomeScreen()), // replace with your first page
+                                        MaterialPageRoute(builder: (context) => HostHomeScreen()),
                                       );
                                     },
                                     child: Text('Host', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)), // modified text style
@@ -113,7 +113,7 @@ class _UserModeState extends State<UserMode> with SingleTickerProviderStateMixin
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => AttendeeHomeScreen()), // replace with your second page
+                                        MaterialPageRoute(builder: (context) => AttendeeHomeScreen()), 
                                       );
                                     },
                                     child: Text('Attendee', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)), // modified text style

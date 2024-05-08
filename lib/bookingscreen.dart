@@ -166,7 +166,6 @@ class EventBookingPageState extends State<EventBookingPage> {
                 TextButton(
                   onPressed: isValidQuantity
                       ? () async {
-                          // Open the booked events box
                           Box<Event> bookedEventsBox =
                               await Hive.openBox<Event>('booked_events');
 
@@ -182,8 +181,6 @@ class EventBookingPageState extends State<EventBookingPage> {
                             totalPrice: totalPrice, // Store the total price
                           );
                           bookedEventsBox.add(bookedEvent);
-
-                          // Close the dialog
                           Navigator.pop(context);
 
                           // Navigate to the payment screen

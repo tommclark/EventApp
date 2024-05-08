@@ -63,15 +63,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
         children: [
           Expanded(
             child: Container(
-              color: Colors.white, // replace with your first color
+              color: Colors.white, 
               child: Center(
-                child: Image.asset('assets/logo.png'), // replace with your logo path
+                child: Image.asset('assets/logo.png'), 
               ),
             ),
           ),
           Expanded(
             child: Container(
-              color: Color(0xff331f46), // replace with your second color
+              color: Color(0xff331f46), 
               child: Padding(
                 padding: const EdgeInsets.all(25),
                 child: Column(
@@ -113,9 +113,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           suffixIcon: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Container(
-                              height: 15.0, // adjust the height as needed
-                              width: 15.0, // adjust the width as needed
-                              child: Image.asset('assets/card_icon.png'), // replace with your icon path
+                              height: 15.0, 
+                              width: 15.0, 
+                              child: Image.asset('assets/card_icon.png'), 
                             ),
                           ),
                         ),

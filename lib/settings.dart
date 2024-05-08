@@ -1,6 +1,4 @@
 import 'package:setap/account.dart';
-
-import 'profile.dart';
 import 'security.dart';
 import 'package:flutter/material.dart';
 
@@ -93,44 +91,7 @@ class Settings extends StatelessWidget {
                   ),
                 ),
               ),
-            //   Padding(
-            //     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            //     child: MaterialButton(
-            //       onPressed: () {
-            //         Navigator.push(
-            //           context,
-            //           MaterialPageRoute(builder: (context) => Account()),
-            //         );
-            //       },
-            //       color: Color(0xff000000),
-            //       elevation: 0,
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(10.0),
-            //         side: BorderSide(color: Color(0xff808080), width: 1),
-            //       ),
-            //       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            //       child: Row(
-            //         mainAxisSize: MainAxisSize.min,
-            //         children: [ 
-            //         Icon(Icons.person, color: Color(0xffed6f1f), size: 24),
-            //         Padding(padding: padding)
-            //         Text(
-            //         "acc",
-            //         style: TextStyle(
-            //           fontSize: 14,
-            //           fontWeight: FontWeight.w400,
-            //           fontStyle: FontStyle.normal,
-            //           color: Color(0xffffffff),
-            //         ),
-            //       ),
-            //           Icon(Icons.arrow_forward_ios,
-            //           color: Color(0xff808080), size: 18),
-            //       ],
-            //     ),
-            //     height: 16,
-            //     minWidth: MediaQuery.of(context).size.width,
-            //   ),
-            // ),
+           
             GestureDetector(
               onTap: () {
               Navigator.push(context,

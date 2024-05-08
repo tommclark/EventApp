@@ -92,7 +92,6 @@ class Account extends StatelessWidget {
               ),
               Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 0)),
               TextField(
-                // controller: TextEditingController(text: "username"),
                 obscureText: false,
                 textAlign: TextAlign.start,
                 maxLines: 1,
@@ -138,7 +137,6 @@ class Account extends StatelessWidget {
               ),
               Padding(padding: EdgeInsets.symmetric(vertical: 16, horizontal: 0)),
               TextField(
-                // controller: TextEditingController(text: "First Name"),
                 obscureText: false,
                 textAlign: TextAlign.start,
                 maxLines: 1,
@@ -184,7 +182,6 @@ class Account extends StatelessWidget {
               ),
               Padding(padding: EdgeInsets.symmetric(vertical: 16, horizontal: 0)),
                 TextField(
-                // controller: TextEditingController(text: "Surname"),
                 obscureText: false,
                 textAlign: TextAlign.start,
                 maxLines: 1,
@@ -230,7 +227,6 @@ class Account extends StatelessWidget {
               ),
               Padding(padding: EdgeInsets.symmetric(vertical: 16, horizontal: 0)),
                 TextField(
-                // controller: TextEditingController(text: "Email"),
                 obscureText: false,
                 textAlign: TextAlign.start,
                 maxLines: 1,
@@ -276,7 +272,6 @@ class Account extends StatelessWidget {
               ),
               Padding(padding: EdgeInsets.symmetric(vertical: 16, horizontal: 0)),
                               TextField(
-                // controller: TextEditingController(text: "Phone Number"),
                 obscureText: false,
                 textAlign: TextAlign.start,
                 maxLines: 1,

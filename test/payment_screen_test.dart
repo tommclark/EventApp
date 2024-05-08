@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:setap/home.dart';
-import 'package:setap/myBook.dart';
 import 'package:setap/payment.dart';
 
 void main() {

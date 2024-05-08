@@ -128,13 +128,13 @@ class _BookedEventsPageState extends State<BookedEventsPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop(); 
                 },
                 child: Text('No'),
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop(); 
                   _cancelEvent(event); // Call _cancelEvent after popping the dialog
                 },
                 child: Text('Yes'),

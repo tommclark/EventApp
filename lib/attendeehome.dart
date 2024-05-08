@@ -6,7 +6,6 @@ import 'package:hive/hive.dart';
 import 'bookingscreen.dart';
 import 'data.dart';
 import 'profile.dart';
-import 'create_page_dart.dart';
 import 'searchpage.dart';
 import 'event_type_model.dart';
 import 'create.dart';
@@ -14,10 +13,10 @@ import 'signin_screen.dart';
 
 class AttendeeHomeScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<AttendeeHomeScreen> {
+class HomeScreenState extends State<AttendeeHomeScreen> {
   List<EventTypeModel> eventsType = [];
   List<DateTime> _dateList =
   List<DateTime>.generate(30, (i) => DateTime.now().add(Duration(days: i)));
@@ -75,7 +74,7 @@ class _HomeScreenState extends State<AttendeeHomeScreen> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                      "assets/drawer_header_background.png"), // replace with your image
+                      "assets/drawer_header_background.png"), 
                   fit: BoxFit.cover,
                 ),
               ),

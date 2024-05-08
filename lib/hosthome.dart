@@ -3,7 +3,6 @@ import 'package:setap/usermode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'bookingscreen.dart';
 import 'data.dart';
 import 'profile.dart';
 import 'create_page_dart.dart';
@@ -75,7 +74,7 @@ class _HomeScreenState extends State<HostHomeScreen> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                      "assets/drawer_header_background.png"), // replace with your image
+                      "assets/drawer_header_background.png"),
                   fit: BoxFit.cover,
                 ),
               ),

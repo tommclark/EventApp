@@ -185,7 +185,7 @@ class EventFormState extends State<EventForm> {
                   color: Colors.white)),
               ),
               TextFormField(
-                controller: _ticketPriceController, // Use the ticket price controller here
+                controller: _ticketPriceController, 
                 style: TextStyle(
                   color: Colors.white),
                 keyboardType: TextInputType.numberWithOptions(decimal: true), // Allow decimal input
